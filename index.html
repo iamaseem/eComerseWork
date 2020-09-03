@@ -28,7 +28,7 @@
                 <div class="form-group no-border">
                 <input type="text" class="form-control" placeholder="Search">
                 </div>
-                <button type="submit" class="btn btn-white btn-just-icon btn-round">
+                <button class="btn btn-white btn-just-icon btn-round">
                     <i class="material-icons">search</i>
                 </button>
             </form>
@@ -58,9 +58,9 @@
                 <div class="collapse navbar-collapse">
                     <form class="form-inline ml-auto">
                         <div class="form-group no-border">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <input type="text" class="form-control" placeholder="Search" v-model="searchTerm">
                         </div>
-                        <button type="submit" class="btn btn-white btn-just-icon btn-round">
+                        <button  @click="search" class="btn btn-white btn-just-icon btn-round">
                             <i class="material-icons">search</i>
                         </button>
                     </form>

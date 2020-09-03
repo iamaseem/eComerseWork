@@ -1,9 +1,28 @@
 const SearchPage = Vue.component("SearchPage",{
     template:`
-        <h2>hello</h2>
+        <div class="d-flex" style="flex-wrap: wrap;">
+            <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in 10">
+                <div class="card text-center" >
+                    <img class="card-img-top" src="https://images.unsplash.com/photo-1517303650219-83c8b1788c4c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bd4c162d27ea317ff8c67255e955e3c8&auto=format&fit=crop&w=2691&q=80" rel="nofollow" alt="Card image cap">
+                    <div class="card-body">
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            <div class="d-flex">
+                                <button class="btn btn-primary btn-sm">Buy now</button>
+                                <button class="btn btn btn-sm">Bargain</button>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     `,
+    data:function(){
+        return{
+            searchResults:[]
+        }
+    },
     created(){
         console.log(this.$route.query.query)
+        //search for the query string store in searchResults.
     }
 })
 
@@ -63,6 +82,7 @@ var app = new Vue({
     router:router,
     data: function() {
         return{
+            searchTerm:null,
             catagories:[
                 {
                     name:"fridge"
@@ -77,10 +97,14 @@ var app = new Vue({
                     name:"fan"
                 }
             ]
-        }
-      
+        } 
     },
     methods:{
+        search(){
+            // console.log(this.$route)
+            // window.location.href=`search?query=${this.searchTerm}`
+            this.$router.push({path:"/search?query="+this.searchTerm})
+        },
         openNav() {
             document.getElementById("mySidebar").style.width = "350px";
           },
