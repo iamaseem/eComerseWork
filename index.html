@@ -26,7 +26,7 @@
             <h3 class="text-white ml-2">Catagories</h3>
             <form class="form-inline ml-auto bg-white">
                 <div class="form-group no-border">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" class="form-control" placeholder="Search" v-model="filterSearchTerm">
                 </div>
                 <button class="btn btn-white btn-just-icon btn-round">
                     <i class="material-icons">search</i>
@@ -34,7 +34,7 @@
             </form>
             <!-- catagories -->
 
-            <a v-for="cata in catagories" :href="cata.name">{{cata.name}}</a>
+            <a v-for="cata in FilteredCatagories" :href="cata.name">{{cata.name}}</a>
 
             <!-- /catagories -->
         </div>
