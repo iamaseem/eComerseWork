@@ -1,5 +1,7 @@
-const SearchPage = Vue.component("SearchPage",{
-    template:`
+import db from "./firebaseinit.js";
+
+const SearchPage = Vue.component("SearchPage", {
+  template: `
         <div class="d-flex" style="flex-wrap: wrap;">
             <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in 10">
                 <div class="card text-center" >
@@ -15,19 +17,19 @@ const SearchPage = Vue.component("SearchPage",{
             </div>
         </div>
     `,
-    data:function(){
-        return{
-            searchResults:[]
-        }
-    },
-    created(){
-        console.log(this.$route.query.query)
-        //search for the query string store in searchResults.
-    }
-})
+  data: function () {
+    return {
+      searchResults: [],
+    };
+  },
+  created() {
+    console.log(this.$route.query.query);
+    //search for the query string store in searchResults.
+  },
+});
 
-const MainPage =Vue.component("mainPage",{
-    template:`
+const MainPage = Vue.component("mainPage", {
+  template: `
     <div>
           <div class="container-fluid">
             <div class="row" style="justify-content:space-around;height: 200px;">
@@ -66,55 +68,71 @@ const MainPage =Vue.component("mainPage",{
             </div>
           </div>
           </div>
-    `
-})
+    `,
+});
 const routes = [
-    { path: '/search', component: SearchPage },
-    { path: '/', component: MainPage }
-]
+  { path: "/search", component: SearchPage },
+  { path: "/", component: MainPage },
+];
 
 const router = new VueRouter({
-    routes // short for `routes: routes`
-})
+  routes, // short for `routes: routes`
+});
 
 var app = new Vue({
-    el: '#app',
-    router:router,
-    data: function() {
-        return{
-            searchTerm:null,
-            catagories:[
-                {
-                    name:"fridge"
-                },
-                {
-                    name:"washing machine"
-                },
-                {
-                    name:"mixi"
-                },
-                {
-                    name:"fan"
-                }
-            ]
-        } 
-    },
-    methods:{
-        search(){
-            // console.log(this.$route)
-            // window.location.href=`search?query=${this.searchTerm}`
-            this.$router.push({path:"/search?query="+this.searchTerm})
+  el: "#app",
+  router: router,
+  data: function () {
+    return {
+      searchTerm: null,
+      catagories: [
+        {
+          name: "fridge",
         },
-        openNav() {
-            document.getElementById("mySidebar").style.width = "350px";
-          },
-          /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-          closeNav() {
-            document.getElementById("mySidebar").style.width = "0";
-          } 
-    }
-    
-  })
-
-
-
+        {
+          name: "washing machine",
+        },
+        {
+          name: "mixi",
+        },
+        {
+          name: "fan",
+        },
+      ],
+    };
+  },
+  methods: {
+    readEmployees() {
+      let employeesData = [];
+      db.collection("Products")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            employeesData.push({
+              id: doc.id,
+              name: doc.data().Name,
+              price: doc.data().Price,
+            });
+            console.log(doc.id, " => ", doc.data());
+          });
+          return employeesData;
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+      console.log(employeesData);
+    },
+    search() {
+      // console.log(this.$route)
+      // window.location.href=`search?query=${this.searchTerm}`
+      this.$router.push({ path: "/search?query=" + this.searchTerm });
+    },
+    openNav() {
+      document.getElementById("mySidebar").style.width = "350px";
+    },
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+    },
+  },
+});
