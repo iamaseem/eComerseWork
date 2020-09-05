@@ -48,5 +48,9 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-open": "^3.0.1"
   },
-  "homepage": "https://demos.creative-tim.com/material-kit/index.html"
+  "homepage": "https://demos.creative-tim.com/material-kit/index.html",
+  "dependencies": {
+    "firebase": "^7.19.1",
+    "vuefire": "^2.2.4"
+  }
 }

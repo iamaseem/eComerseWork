@@ -1,3 +1,4 @@
+import db from "./firebaseinit.js";
 const SearchPage = Vue.component("SearchPage", {
   template: `
     <div>
@@ -218,6 +219,26 @@ var app = new Vue({
     },
   },
   methods: {
+    readEmployees() {
+      let employeesData = [];
+      db.collection("Products")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            employeesData.push({
+              id: doc.id,
+              name: doc.data().Name,
+              price: doc.data().Price,
+            });
+            console.log(doc.id, " => ", doc.data());
+          });
+          return employeesData;
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+      console.log(employeesData);
+    },
     search() {
       this.$router.push({ path: "/search?query=" + this.searchTerm });
     },
