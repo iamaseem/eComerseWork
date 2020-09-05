@@ -1,5 +1,5 @@
-const SearchPage = Vue.component("SearchPage",{
-    template:`
+const SearchPage = Vue.component("SearchPage", {
+  template: `
     <div>
         <div v-if="loading" style="width:100vw;height:100vh;" class="text-center">
             <h2 style="margin-top:10vh">Loading...</h2>
@@ -57,84 +57,84 @@ const SearchPage = Vue.component("SearchPage",{
         </div>
     </div>
     `,
-    data:function(){
-        return{
-            selectedSearchResult:{},
-            loading:true,
-            searchResults:[
-                {
-                    name:"Unda",
-                    location:"Kannur",
-                    inStock:true,
-                    rate:'2000'
-                },
-                {
-                    name:"Bonda",
-                    location:"Koykod",
-                    inStock:false,
-                    rate:'4000'
-                },
-                {
-                    name:"Pathiri",
-                    location:"Atholi",
-                    inStock:true,
-                    rate:'3000'
-                },
-                {
-                    name:"Unda",
-                    location:"Kannur",
-                    inStock:true,
-                    rate:'2000'
-                },
-                {
-                    name:"Bonda",
-                    location:"Koykod",
-                    inStock:false,
-                    rate:'4000'
-                },
-                {
-                    name:"Pathiri",
-                    location:"Atholi",
-                    inStock:true,
-                    rate:'3000'
-                },
-                {
-                    name:"Unda",
-                    location:"Kannur",
-                    inStock:true,
-                    rate:'2000'
-                },
-                {
-                    name:"Bonda",
-                    location:"Koykod",
-                    inStock:false,
-                    rate:'4000'
-                },
-                {
-                    name:"Pathiri",
-                    location:"Atholi",
-                    inStock:true,
-                    rate:'3000'
-                }
-            ]
-        }
+  data: function () {
+    return {
+      selectedSearchResult: {},
+      loading: true,
+      searchResults: [
+        {
+          name: "Unda",
+          location: "Kannur",
+          inStock: true,
+          rate: "2000",
+        },
+        {
+          name: "Bonda",
+          location: "Koykod",
+          inStock: false,
+          rate: "4000",
+        },
+        {
+          name: "Pathiri",
+          location: "Atholi",
+          inStock: true,
+          rate: "3000",
+        },
+        {
+          name: "Unda",
+          location: "Kannur",
+          inStock: true,
+          rate: "2000",
+        },
+        {
+          name: "Bonda",
+          location: "Koykod",
+          inStock: false,
+          rate: "4000",
+        },
+        {
+          name: "Pathiri",
+          location: "Atholi",
+          inStock: true,
+          rate: "3000",
+        },
+        {
+          name: "Unda",
+          location: "Kannur",
+          inStock: true,
+          rate: "2000",
+        },
+        {
+          name: "Bonda",
+          location: "Koykod",
+          inStock: false,
+          rate: "4000",
+        },
+        {
+          name: "Pathiri",
+          location: "Atholi",
+          inStock: true,
+          rate: "3000",
+        },
+      ],
+    };
+  },
+  methods: {
+    bargainClicked(i) {
+      this.selectedSearchResult = i;
     },
-    methods:{
-        bargainClicked(i){
-            this.selectedSearchResult=i
-        }
-    },
-    created(){
-        console.log(this.$route.query.query)
-        setTimeout(()=>{
-            this.loading=false
-        },2000)
-        //search for the query string store in searchResults.
-    }
-})
+  },
+  created() {
+    console.log(this.$route.query.query);
+    setTimeout(() => {
+      this.loading = false;
+    }, 2000);
+    //search for the query string store in searchResults.
+  },
+});
 
-const MainPage =Vue.component("mainPage",{
-    template:`
+const MainPage = Vue.component("mainPage", {
+  template: `
     <div>
           <div class="container-fluid">
             <div class="row" style="justify-content:space-around;height: 200px;">
@@ -173,66 +173,60 @@ const MainPage =Vue.component("mainPage",{
             </div>
           </div>
           </div>
-    `
-})
+    `,
+});
 const routes = [
-    { path: '/search', component: SearchPage },
-    { path: '/', component: MainPage }
-]
+  { path: "/search", component: SearchPage },
+  { path: "/", component: MainPage },
+];
 
 const router = new VueRouter({
-    routes // short for `routes: routes`
-})
+  routes, // short for `routes: routes`
+});
 
 var app = new Vue({
-    el: '#app',
-    router:router,
-    data: function() {
-        return{
-            filterSearchTerm:null,
-            searchTerm:null,
-            catagories:[
-                {
-                    name:"fridge"
-                },
-                {
-                    name:"washing machine"
-                },
-                {
-                    name:"mixi"
-                },
-                {
-                    name:"fan"
-                }
-            ]
-        } 
-    },
-    computed:{
-        FilteredCatagories(){
-            if(!this.filterSearchTerm){
-                return this.catagories
-            }
-            return this.catagories.filter((catagory)=>{
-                return(
-                    catagory.name.indexOf(this.filterSearchTerm)>-1
-                )
-            })
-        }
-    },
-    methods:{
-        search(){
-            this.$router.push({path:"/search?query="+this.searchTerm})
+  el: "#app",
+  router: router,
+  data: function () {
+    return {
+      filterSearchTerm: null,
+      searchTerm: null,
+      catagories: [
+        {
+          name: "fridge",
         },
-        openNav() {
-            document.getElementById("mySidebar").style.width = "350px";
-          },
-          /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
-          closeNav() {
-            document.getElementById("mySidebar").style.width = "0";
-          } 
-    }
-    
-  })
-
-
-
+        {
+          name: "washing machine",
+        },
+        {
+          name: "mixi",
+        },
+        {
+          name: "fan",
+        },
+      ],
+    };
+  },
+  computed: {
+    FilteredCatagories() {
+      if (!this.filterSearchTerm) {
+        return this.catagories;
+      }
+      return this.catagories.filter((catagory) => {
+        return catagory.name.indexOf(this.filterSearchTerm) > -1;
+      });
+    },
+  },
+  methods: {
+    search() {
+      this.$router.push({ path: "/search?query=" + this.searchTerm });
+    },
+    openNav() {
+      document.getElementById("mySidebar").style.width = "350px";
+    },
+    /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
+    closeNav() {
+      document.getElementById("mySidebar").style.width = "0";
+    },
+  },
+});
