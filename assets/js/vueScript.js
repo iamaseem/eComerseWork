@@ -1,3 +1,4 @@
+import db from "./firebaseinit.js";
 const SearchPage = Vue.component("SearchPage",{
     template:`
     <div>
@@ -133,8 +134,8 @@ const SearchPage = Vue.component("SearchPage",{
     }
 })
 
-const MainPage =Vue.component("mainPage",{
-    template:`
+const MainPage = Vue.component("mainPage", {
+  template: `
     <div>
           <div class="container-fluid">
             <div class="row" style="justify-content:space-around;height: 200px;">
@@ -173,16 +174,16 @@ const MainPage =Vue.component("mainPage",{
             </div>
           </div>
           </div>
-    `
-})
+    `,
+});
 const routes = [
-    { path: '/search', component: SearchPage },
-    { path: '/', component: MainPage }
-]
+  { path: "/search", component: SearchPage },
+  { path: "/", component: MainPage },
+];
 
 const router = new VueRouter({
-    routes // short for `routes: routes`
-})
+  routes, // short for `routes: routes`
+});
 
 var app = new Vue({
     el: '#app',
@@ -219,8 +220,28 @@ var app = new Vue({
             })
         }
     },
-    methods:{
-        search(){
+  methods: {
+    readEmployees() {
+      let employeesData = [];
+      db.collection("Products")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            employeesData.push({
+              id: doc.id,
+              name: doc.data().Name,
+              price: doc.data().Price,
+            });
+            console.log(doc.id, " => ", doc.data());
+          });
+          return employeesData;
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+      console.log(employeesData);
+    },
+    search(){
             this.$router.push({path:"/search?query="+this.searchTerm})
         },
         openNav() {
@@ -229,10 +250,6 @@ var app = new Vue({
           /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
           closeNav() {
             document.getElementById("mySidebar").style.width = "0";
-          } 
-    }
-    
-  })
-
-
-
+          },
+  },
+});
