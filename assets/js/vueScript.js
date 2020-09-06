@@ -7,24 +7,85 @@ const SearchPage = Vue.component("SearchPage", {
         </div>
         
         <div v-else class="d-flex">
-            <div style="height:100vh; flex:1" class="bg-white m-4 p-3">
-                <h4>Filter</h4>
+            <div style=" flex:1" class="bg-white m-4 p-4">
+                <h5>
+                  Filter
+                  <span class="material-icons" style="font-size:13px;">
+                    filter_list
+                  </span>
+                </h5>
+                <div class="form-group">
+                    <label for="selectCatagory">Category</label>
+                    <select class="form-control selectpicker" data-style="btn btn-link" id="selectCatagory">
+                      <option>All</option>
+                      <option>Electronics</option>
+                      <option>Electricals</option>
+                      <option>Other</option>
+                    </select>
+                    <br/>
+                    <label for="priceRange">
+                      Price Range
+                    </label>
+                    <div class="form-check form-check-radio" id="priceRange">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" >
+                            Below 5000
+                            <span class="circle">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" >
+                            Below 200
+                            <span class="circle">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                    </div>
+                    <br/>
+                    <label for="selectCatagory">Company</label>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value="">
+                              Samsung
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                        <br/>
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" value="">
+                              Bajaj
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
             </div>
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
                 <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResults">
-                    <div class="card text-center" >
+                    <div class="card" >
                         <img class="card-img-top" src="https://images.unsplash.com/photo-1517303650219-83c8b1788c4c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bd4c162d27ea317ff8c67255e955e3c8&auto=format&fit=crop&w=2691&q=80" rel="nofollow" alt="Card image cap">
                         <div class="card-body">
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                <div class="d-flex">
-                                    <button class="btn btn-primary btn-sm">Buy now</button>
-                                    <button
-                                        class="btn btn btn-sm"
-                                        @click="bargainClicked(i)"
-                                        data-toggle="modal" data-target="#exampleModal"
-                                    >Bargain
-                                    </button>
-                                </div>
+                            <h5 class="card-title">{{i.name}}</h5>
+                            <span class="badge badge-success py-1 px-2">
+                              <span class="material-icons" style="font-size:13px">
+                                attach_money
+                              </span>
+                              {{i.price}}
+                            </span>
+                            <p class="card-text py-2">{{i.description}}  adlf aldu aldsf adaldfalkf</p>
+                            <div class="d-flex">
+                                <button class="btn btn-primary btn-sm">Buy now</button>
+                                <button
+                                    class="btn btn btn-sm"
+                                    @click="bargainClicked(i)"
+                                    data-toggle="modal" data-target="#exampleModal"
+                                  >Bargain
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -62,75 +123,59 @@ const SearchPage = Vue.component("SearchPage", {
     return {
       selectedSearchResult: {},
       loading: true,
-      searchResults: [
-        {
-          name: "Unda",
-          location: "Kannur",
-          inStock: true,
-          rate: "2000",
-        },
-        {
-          name: "Bonda",
-          location: "Koykod",
-          inStock: false,
-          rate: "4000",
-        },
-        {
-          name: "Pathiri",
-          location: "Atholi",
-          inStock: true,
-          rate: "3000",
-        },
-        {
-          name: "Unda",
-          location: "Kannur",
-          inStock: true,
-          rate: "2000",
-        },
-        {
-          name: "Bonda",
-          location: "Koykod",
-          inStock: false,
-          rate: "4000",
-        },
-        {
-          name: "Pathiri",
-          location: "Atholi",
-          inStock: true,
-          rate: "3000",
-        },
-        {
-          name: "Unda",
-          location: "Kannur",
-          inStock: true,
-          rate: "2000",
-        },
-        {
-          name: "Bonda",
-          location: "Koykod",
-          inStock: false,
-          rate: "4000",
-        },
-        {
-          name: "Pathiri",
-          location: "Atholi",
-          inStock: true,
-          rate: "3000",
-        },
-      ],
+      products: [],
+      searchResults:[]
     };
   },
   methods: {
+    showLoading(){
+      this.loading=true
+      setTimeout(() => {
+        this.loading = false;
+      }, 500);
+    },
+    searchProducts() {
+      if (!this.$route.query.query) {
+        this.searchResults= this.products
+        return;
+      }
+      this.searchResults=this.products.filter((product) => {
+        return product.name.toUpperCase().indexOf(this.$route.query.query.toUpperCase()) > -1;
+      });
+    },
     bargainClicked(i) {
       this.selectedSearchResult = i;
     },
+    readProducts() {
+      db.collection("Products")
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            this.products.push({
+              id: doc.id,
+              name: doc.data().Name,
+              price: doc.data().Price,
+            });
+          });
+        })
+        .catch((error) => {
+          console.log("Error getting documents: ", error);
+        });
+    },
+
   },
-  created() {
-    console.log(this.$route.query.query);
-    setTimeout(() => {
-      this.loading = false;
-    }, 2000);
-    //search for the query string store in searchResults.
+  watch:{
+    products:function(){
+      this.showLoading()
+      this.searchProducts()
+    },
+    $route:function(){
+      this.showLoading()
+      this.searchProducts()
+    }
+  },
+  async mounted() {
+    await this.readProducts();
   },
 });
 
