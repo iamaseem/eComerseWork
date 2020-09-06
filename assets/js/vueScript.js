@@ -28,15 +28,22 @@ const SearchPage = Vue.component("SearchPage", {
                     </label>
                     <div class="form-check form-check-radio" id="priceRange">
                         <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" >
+                            <input class="form-check-input" type="radio" v-model="filterMaxPrice" name="exampleRadios" value="5000" >
                             Below 5000
                             <span class="circle">
                                 <span class="check"></span>
                             </span>
                         </label>
                         <label class="form-check-label">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" >
-                            Below 200
+                            <input class="form-check-input" v-model="filterMaxPrice" type="radio" name="exampleRadios" value="1000" >
+                            Below 1000
+                            <span class="circle">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="radio" v-model="filterMaxPrice" name="exampleRadios" value="" >
+                            Any
                             <span class="circle">
                                 <span class="check"></span>
                             </span>
@@ -65,22 +72,38 @@ const SearchPage = Vue.component("SearchPage", {
 
             </div>
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
-                <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResults">
+                <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card" >
                         <img class="card-img-top" src="https://images.unsplash.com/photo-1517303650219-83c8b1788c4c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bd4c162d27ea317ff8c67255e955e3c8&auto=format&fit=crop&w=2691&q=80" rel="nofollow" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">{{i.name}}</h5>
-                            <span class="badge badge-success py-1 px-2">
-                              <span class="material-icons" style="font-size:13px">
-                                attach_money
-                              </span>
-                              {{i.price}}
-                            </span>
-                            <p class="card-text py-2">{{i.description}}  adlf aldu aldsf adaldfalkf</p>
-                            <div class="d-flex">
-                                <button class="btn btn-primary btn-sm">Buy now</button>
+                        <div class="card-body px-4 pt-1 pb-3">
+                            <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
+                            <small>{{i.company}}</small>
+                            <div class="d-flex pt-2" style="justify-content:space-between">
+                                <span class="badge badge-success py-1 px-2">
+                                  <span class="material-icons" style="font-size:13px">
+                                    attach_money
+                                  </span>
+                                  {{i.price}}
+                                </span>
+                                
+                                <small  v-if="i.quantity">
+                                  <span class="text-success">
+                                    in stock
+                                  </span>
+                                  <span>{{i.quantity}} left</span>
+                                </small>
+                                <small  v-else>
+                                  <span class="text-danger">
+                                    out of stock
+                                  </span>
+                                </small>
+                              </div>
+                            <p class="card-text py-1">{{i.desc}}</p>
+                            
+                            <div class="d-flex" style="justify-content:center">
+                                <button class="btn btn-sm btn-secondary">Buy now</button>
                                 <button
-                                    class="btn btn btn-sm"
+                                    class="btn btn btn-sm btn-primary"
                                     @click="bargainClicked(i)"
                                     data-toggle="modal" data-target="#exampleModal"
                                   >Bargain
@@ -94,7 +117,8 @@ const SearchPage = Vue.component("SearchPage", {
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                        <div class="modal-header">
+                        
+                          <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">
                                 {{this.selectedSearchResult.name}}
                             </h5>
@@ -103,7 +127,20 @@ const SearchPage = Vue.component("SearchPage", {
                             </button>
                         </div>
                         <div class="modal-body">
-                            ...
+                            <p>{{this.selectedSearchResult.company}}</p>
+                            <span class="badge badge-success py-1 px-2">
+                                  <span class="material-icons" style="font-size:13px">
+                                    attach_money
+                                  </span>
+                                  {{this.selectedSearchResult.price}}
+                            </span>
+                            <p>{{this.selectedSearchResult.desc}}</p>
+                            <p class="text-success">{{this.selectedSearchResult.spec}}</p>
+                            <small class="text-danger">Hurry!! only {{this.selectedSearchResult.quantity}} left</small>
+                            <div>
+                              <label for="number">Number of Pieces</label>
+                              <input type="number" class="form-control" id="number" min="1" :max="selectedSearchResult.quantity">
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button @click="selectedSearchResult={}" type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -124,8 +161,20 @@ const SearchPage = Vue.component("SearchPage", {
       selectedSearchResult: {},
       loading: true,
       products: [],
-      searchResults:[]
+      searchResults:[],
+      filterMaxPrice:null
     };
+  },
+  computed:{
+    searchResultsAfterFilter(){
+      if(!this.filterMaxPrice){
+        return this.searchResults;
+      }
+        return this.searchResults.filter((result)=>{
+          return parseFloat(result.price)  <= this.filterMaxPrice;
+        })
+      
+    }
   },
   methods: {
     showLoading(){
@@ -135,7 +184,7 @@ const SearchPage = Vue.component("SearchPage", {
       }, 500);
     },
     searchProducts() {
-      if (!this.$route.query.query) {
+      if (!this.$route.query.query || this.$route.query.query=="null") {
         this.searchResults= this.products
         return;
       }
@@ -155,6 +204,10 @@ const SearchPage = Vue.component("SearchPage", {
               id: doc.id,
               name: doc.data().Name,
               price: doc.data().Price,
+              company: doc.data().Company,
+              desc: doc.data().Details,
+              quantity: doc.data().Quantity,
+              spec: doc.data().Specification
             });
           });
         })
