@@ -26,6 +26,7 @@
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-storage.js"></script>
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
      https://firebase.google.com/docs/web/setup#available-libraries -->
@@ -46,7 +47,12 @@
             class="form-group no-border"
             style="margin-bottom: 17px !important"
           >
-            <input v-model="filterSearchTerm" type="text" class="form-control" placeholder="Search" />
+            <input
+              v-model="filterSearchTerm"
+              type="text"
+              class="form-control"
+              placeholder="Search"
+            />
           </div>
           <button class="btn btn-white btn-just-icon btn-round">
             <i class="material-icons">search</i>
@@ -54,7 +60,9 @@
         </form>
         <!-- catagories -->
 
-        <a v-for="cata in FilteredCatagories" :href="cata.name">{{cata.name}}</a>
+        <a v-for="cata in FilteredCatagories" :href="cata.name"
+          >{{cata.name}}</a
+        >
 
         <!-- /catagories -->
       </div>
@@ -67,7 +75,7 @@
             <button class="openbtn btn btn-success" @click="openNav">
               &#9776;
             </button>
-            
+
             <button
               class="navbar-toggler"
               type="button"
@@ -83,14 +91,22 @@
           </div>
           <div class="collapse navbar-collapse">
             <form class="form-inline ml-auto">
-                <div class="form-group no-border">
-                <input type="text" class="form-control" placeholder="Search" v-model="searchTerm">
-                </div>
-                <button  @click="search" class="btn btn-white btn-just-icon btn-round">
-                    <i class="material-icons">search</i>
-                </button>
+              <div class="form-group no-border">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Search"
+                  v-model="searchTerm"
+                />
+              </div>
+              <button
+                @click="search"
+                class="btn btn-white btn-just-icon btn-round"
+              >
+                <i class="material-icons">search</i>
+              </button>
             </form>
-        </div>
+          </div>
         </div>
       </nav>
 
