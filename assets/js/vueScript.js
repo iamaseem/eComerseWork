@@ -1,9 +1,7 @@
 import db, { store } from "./firebaseinit.js";
 
-//var storeRef = store.ref();
-//var imageRef = storeRef.child("Images/1-2.jpeg");
-//console.log(imageRef);
-//var Url = "not done";
+var storeRef = store.ref();
+
 
 const SearchPage = Vue.component("SearchPage", {
   template: `
@@ -80,7 +78,7 @@ const SearchPage = Vue.component("SearchPage", {
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
                 <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card" >
-                        <img v-bind:src=imageUrl class="card-img-top" rel="nofollow" alt="Card image cap">
+                        <img :src="i.images[0]" class="card-img-top" rel="nofollow" alt="Card image cap">
                         <div class="card-body px-4 pt-1 pb-3">
                             <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
                             <small>{{i.company}}</small>
@@ -234,7 +232,7 @@ const SearchPage = Vue.component("SearchPage", {
               desc: doc.data().Details,
               quantity: doc.data().Quantity,
               spec: doc.data().Specification,
-              imgUrl: null,
+              images: [],
             });
           });
         })
@@ -242,23 +240,26 @@ const SearchPage = Vue.component("SearchPage", {
           console.log("Error getting documents: ", error);
         });
     },
-    //readImage() {
-    //imageRef
-    //.getDownloadURL()
-    //.then((url) => {
-    // ->>Insert url into an <img> tag to "download"<<-
-    //this.products.push({ imgUrl: url });
-    //})
-    //.catch(function (error) {
-    //console.log(error);
-    //});
-    //console.log(this.product.Url);
-    //},
+    readImage() {
+      for(let product in this.products){
+        var imageRef = storeRef.child("/Images/"+this.products[product].id+"/1");
+        imageRef
+          .getDownloadURL()
+          .then((url)=>{
+            this.products[product].images.push(url)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      } 
+      console.log(this.products)
+    },
   },
   watch: {
     products: function () {
       this.showLoading();
       this.searchProducts();
+      this.readImage();
     },
     $route: function () {
       this.showLoading();
