@@ -1,4 +1,10 @@
-import db from "./firebaseinit.js";
+import db, { store } from "./firebaseinit.js";
+
+//var storeRef = store.ref();
+//var imageRef = storeRef.child("Images/1-2.jpeg");
+//console.log(imageRef);
+//var Url = "not done";
+
 const SearchPage = Vue.component("SearchPage", {
   template: `
     <div>
@@ -74,7 +80,7 @@ const SearchPage = Vue.component("SearchPage", {
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
                 <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card" >
-                        <img class="card-img-top" src="https://images.unsplash.com/photo-1517303650219-83c8b1788c4c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=bd4c162d27ea317ff8c67255e955e3c8&auto=format&fit=crop&w=2691&q=80" rel="nofollow" alt="Card image cap">
+                        <img v-bind:src=imageUrl class="card-img-top" rel="nofollow" alt="Card image cap">
                         <div class="card-body px-4 pt-1 pb-3">
                             <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
                             <small>{{i.company}}</small>
@@ -163,53 +169,57 @@ const SearchPage = Vue.component("SearchPage", {
       selectedSearchResult: {},
       loading: true,
       products: [],
-      searchResults:[],
-      filterMaxPrice:null,
-      bargainPrice:null,
-      bargainNumber:null
+      searchResults: [],
+      filterMaxPrice: null,
+      bargainPrice: null,
+      bargainNumber: null,
+      imageUrl: null,
     };
   },
-  computed:{
-    searchResultsAfterFilter(){
-      if(!this.filterMaxPrice){
+  computed: {
+    searchResultsAfterFilter() {
+      if (!this.filterMaxPrice) {
         return this.searchResults;
       }
-        return this.searchResults.filter((result)=>{
-          return parseFloat(result.price)  <= this.filterMaxPrice;
-        })
-      
-    }
+      return this.searchResults.filter((result) => {
+        return parseFloat(result.price) <= this.filterMaxPrice;
+      });
+    },
   },
   methods: {
-    showLoading(){
-      this.loading=true
+    showLoading() {
+      this.loading = true;
       setTimeout(() => {
         this.loading = false;
       }, 500);
     },
     searchProducts() {
-      if (!this.$route.query.query || this.$route.query.query=="null") {
-        this.searchResults= this.products
+      if (!this.$route.query.query || this.$route.query.query == "null") {
+        this.searchResults = this.products;
         return;
       }
-      this.searchResults=this.products.filter((product) => {
-        return product.name.toUpperCase().indexOf(this.$route.query.query.toUpperCase()) > -1;
+      this.searchResults = this.products.filter((product) => {
+        return (
+          product.name
+            .toUpperCase()
+            .indexOf(this.$route.query.query.toUpperCase()) > -1
+        );
       });
     },
     bargainClicked(i) {
       this.selectedSearchResult = i;
     },
-    bargain(){
-      if(parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity){
-        alert("Only "+ this.selectedSearchResult.quantity + " pieces left !")
-        return
+    bargain() {
+      if (parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity) {
+        alert("Only " + this.selectedSearchResult.quantity + " pieces left !");
+        return;
       }
-      if(this.bargainPrice <= this.selectedSearchResult.price*3/4){
-        alert("Bargain price cannot be too low")
-        return
+      if (this.bargainPrice <= (this.selectedSearchResult.price * 3) / 4) {
+        alert("Bargain price cannot be too low");
+        return;
       }
-      
-      $('#exampleModal').modal("hide")
+
+      $("#exampleModal").modal("hide");
     },
     readProducts() {
       db.collection("Products")
@@ -223,7 +233,8 @@ const SearchPage = Vue.component("SearchPage", {
               company: doc.data().Company,
               desc: doc.data().Details,
               quantity: doc.data().Quantity,
-              spec: doc.data().Specification
+              spec: doc.data().Specification,
+              imgUrl: null,
             });
           });
         })
@@ -231,20 +242,32 @@ const SearchPage = Vue.component("SearchPage", {
           console.log("Error getting documents: ", error);
         });
     },
-
+    //readImage() {
+    //imageRef
+    //.getDownloadURL()
+    //.then((url) => {
+    // ->>Insert url into an <img> tag to "download"<<-
+    //this.products.push({ imgUrl: url });
+    //})
+    //.catch(function (error) {
+    //console.log(error);
+    //});
+    //console.log(this.product.Url);
+    //},
   },
-  watch:{
-    products:function(){
-      this.showLoading()
-      this.searchProducts()
+  watch: {
+    products: function () {
+      this.showLoading();
+      this.searchProducts();
     },
-    $route:function(){
-      this.showLoading()
-      this.searchProducts()
-    }
+    $route: function () {
+      this.showLoading();
+      this.searchProducts();
+    },
   },
   async mounted() {
     await this.readProducts();
+    //await this.readImage();
   },
 });
 
