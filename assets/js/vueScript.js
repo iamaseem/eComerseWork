@@ -79,9 +79,9 @@ const SearchPage = Vue.component("SearchPage", {
                             <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
                             <small>{{i.company}}</small>
                             <div class="d-flex pt-2" style="justify-content:space-between">
-                                <span class="badge badge-success py-1 px-2">
-                                  <span class="material-icons" style="font-size:13px">
-                                    attach_money
+                                <span class="badge badge-success py-2 px-2">
+                                  <span class="text-white" style="font-size:.6rem">
+                                    INR
                                   </span>
                                   {{i.price}}
                                 </span>
@@ -128,10 +128,10 @@ const SearchPage = Vue.component("SearchPage", {
                         </div>
                         <div class="modal-body">
                             <p>{{this.selectedSearchResult.company}}</p>
-                            <span class="badge badge-success py-1 px-2">
-                                  <span class="material-icons" style="font-size:13px">
-                                    attach_money
-                                  </span>
+                            <span class="badge badge-success py-2 px-2">
+                            <span class="text-white" style="font-size:.6rem">
+                              INR
+                            </span>
                                   {{this.selectedSearchResult.price}}
                             </span>
                             <p>{{this.selectedSearchResult.desc}}</p>
