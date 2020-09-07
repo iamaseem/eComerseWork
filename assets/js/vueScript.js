@@ -138,15 +138,17 @@ const SearchPage = Vue.component("SearchPage", {
                             <p class="text-success">{{this.selectedSearchResult.spec}}</p>
                             <small class="text-danger">Hurry!! only {{this.selectedSearchResult.quantity}} left</small>
                             <div>
-                              <label for="number">Number of Pieces</label>
-                              <input type="number" class="form-control" id="number" min="1" :max="selectedSearchResult.quantity">
+                              <label for="bargainNumber">Number of Pieces</label>
+                              <input v-model="bargainNumber" type="number" class="form-control" id="bargainNumber" min="1" :max="selectedSearchResult.quantity">
+                              <label for="bargainPrice">At a rate of</label>
+                              <input v-model="bargainPrice" type="number" class="form-control" id="bargainPrice" min="1" :max="selectedSearchResult.price">
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button @click="selectedSearchResult={}" type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" class="btn btn-primary">Bargain</button>
+                            <button type="button" class="btn btn-primary" @click="bargain">Bargain</button>
                         </div>
                         </div>
                     </div>
@@ -162,7 +164,9 @@ const SearchPage = Vue.component("SearchPage", {
       loading: true,
       products: [],
       searchResults:[],
-      filterMaxPrice:null
+      filterMaxPrice:null,
+      bargainPrice:null,
+      bargainNumber:null
     };
   },
   computed:{
@@ -194,6 +198,18 @@ const SearchPage = Vue.component("SearchPage", {
     },
     bargainClicked(i) {
       this.selectedSearchResult = i;
+    },
+    bargain(){
+      if(parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity){
+        alert("Only "+ this.selectedSearchResult.quantity + " pieces left !")
+        return
+      }
+      if(this.bargainPrice <= this.selectedSearchResult.price*3/4){
+        alert("Bargain price cannot be too low")
+        return
+      }
+      
+      $('#exampleModal').modal("hide")
     },
     readProducts() {
       db.collection("Products")
@@ -317,26 +333,6 @@ var app = new Vue({
     },
   },
   methods: {
-    readEmployees() {
-      let employeesData = [];
-      db.collection("Products")
-        .get()
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            employeesData.push({
-              id: doc.id,
-              name: doc.data().Name,
-              price: doc.data().Price,
-            });
-            console.log(doc.id, " => ", doc.data());
-          });
-          return employeesData;
-        })
-        .catch((error) => {
-          console.log("Error getting documents: ", error);
-        });
-      console.log(employeesData);
-    },
     search() {
       this.$router.push({ path: "/search?query=" + this.searchTerm });
     },
