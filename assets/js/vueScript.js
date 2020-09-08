@@ -2,7 +2,6 @@ import db, { store } from "./firebaseinit.js";
 
 var storeRef = store.ref();
 
-
 const SearchPage = Vue.component("SearchPage", {
   template: `
     <div>
@@ -77,8 +76,8 @@ const SearchPage = Vue.component("SearchPage", {
             </div>
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
                 <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
-                    <div class="card" >
-                        <img :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
+                    <div class="card">
+                        <img style="height: 150px;"  :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
                         <div class="card-body px-4 pt-1 pb-3">
                             <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
                             <small>{{i.company}}</small>
@@ -222,9 +221,9 @@ const SearchPage = Vue.component("SearchPage", {
     },
   },
   methods: {
-    showImgCaro(item){
-      this.selectedSearchResult=item;
-      $('#carouselModel').modal('show')
+    showImgCaro(item) {
+      this.selectedSearchResult = item;
+      $("#carouselModel").modal("show");
     },
     showLoading() {
       this.loading = true;
@@ -249,7 +248,10 @@ const SearchPage = Vue.component("SearchPage", {
       this.selectedSearchResult = i;
     },
     bargain() {
-      if (parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity || !this.bargainNumber) {
+      if (
+        parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity ||
+        !this.bargainNumber
+      ) {
         alert("Only " + this.selectedSearchResult.quantity + " pieces left !");
         return;
       }
@@ -259,9 +261,9 @@ const SearchPage = Vue.component("SearchPage", {
       }
       //Do something.
       $("#exampleModal").modal("hide");
-      this.bargainNumber = null
-      this.bargainPrice = null
-      this.selectedSearchResult = {}
+      this.bargainNumber = null;
+      this.bargainPrice = null;
+      this.selectedSearchResult = {};
     },
     readProducts() {
       db.collection("Products")
@@ -285,20 +287,22 @@ const SearchPage = Vue.component("SearchPage", {
         });
     },
     readImage() {
-      for(let product in this.products){
-        for(let imgNo=1; imgNo<5; imgNo++){
-          var imageRef = storeRef.child("/Images/"+this.products[product].id+"/" +imgNo);
+      for (let product in this.products) {
+        for (let imgNo = 1; imgNo < 5; imgNo++) {
+          var imageRef = storeRef.child(
+            "/Images/" + this.products[product].id + "/" + imgNo
+          );
           imageRef
             .getDownloadURL()
-            .then((url)=>{
-              this.products[product].images.push(url)
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            .then((url) => {
+              this.products[product].images.push(url);
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         }
-      } 
-      console.log(this.products)
+      }
+      console.log(this.products);
     },
   },
   watch: {
