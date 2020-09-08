@@ -78,7 +78,7 @@ const SearchPage = Vue.component("SearchPage", {
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
                 <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card" >
-                        <img :src="i.images[0]" class="card-img-top" rel="nofollow" alt="Card image cap">
+                        <img :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
                         <div class="card-body px-4 pt-1 pb-3">
                             <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
                             <small>{{i.company}}</small>
@@ -158,6 +158,43 @@ const SearchPage = Vue.component("SearchPage", {
                     </div>
                 </div>
                 <!-- /Model -->
+
+                <!-- Modal for caro -->
+
+                  <div class="modal fade" id="carouselModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog bg-success" role="document">
+                      <div class="modal-content">
+                        
+                        <div class="modal-body">
+                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                              <li v-for="(image,index) in selectedSearchResult.images" data-target="#carouselExampleIndicators" data-slide-to="index" v-bind:class="{ active: !index }"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                              <div v-for="(image,index) in selectedSearchResult.images" class="carousel-item" v-bind:class="{ active: !index }">
+                                <img class="d-block w-100" :src="image" alt="First slide">
+                              </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+                          </div>
+                          
+                      
+                        </div>
+                        <div class="modal-footer">
+                          <button @click="selectedSearchResult={}" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-dismiss="modal">Bargain</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- /Model for caro-->
             </div>
         </div>
     </div>
@@ -185,6 +222,10 @@ const SearchPage = Vue.component("SearchPage", {
     },
   },
   methods: {
+    showImgCaro(item){
+      this.selectedSearchResult=item;
+      $('#carouselModel').modal('show')
+    },
     showLoading() {
       this.loading = true;
       setTimeout(() => {
@@ -208,7 +249,7 @@ const SearchPage = Vue.component("SearchPage", {
       this.selectedSearchResult = i;
     },
     bargain() {
-      if (parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity) {
+      if (parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity || !this.bargainNumber) {
         alert("Only " + this.selectedSearchResult.quantity + " pieces left !");
         return;
       }
@@ -216,8 +257,11 @@ const SearchPage = Vue.component("SearchPage", {
         alert("Bargain price cannot be too low");
         return;
       }
-
+      //Do something.
       $("#exampleModal").modal("hide");
+      this.bargainNumber = null
+      this.bargainPrice = null
+      this.selectedSearchResult = {}
     },
     readProducts() {
       db.collection("Products")
@@ -242,15 +286,17 @@ const SearchPage = Vue.component("SearchPage", {
     },
     readImage() {
       for(let product in this.products){
-        var imageRef = storeRef.child("/Images/"+this.products[product].id+"/1");
-        imageRef
-          .getDownloadURL()
-          .then((url)=>{
-            this.products[product].images.push(url)
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+        for(let imgNo=1; imgNo<5; imgNo++){
+          var imageRef = storeRef.child("/Images/"+this.products[product].id+"/" +imgNo);
+          imageRef
+            .getDownloadURL()
+            .then((url)=>{
+              this.products[product].images.push(url)
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        }
       } 
       console.log(this.products)
     },
