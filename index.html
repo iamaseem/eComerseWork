@@ -38,10 +38,12 @@
     <div id="app">
       <!-- side bar stylesheet in assets/css/sidebar.css -->
       <div id="mySidebar" class="sidebar">
-        <a href="javascript:void(0)" class="closebtn" @click="closeNav"
-          >&times;</a
-        >
-        <h3 class="text-white ml-2">Catagories</h3>
+        <div class="sideHead">
+          <a href="javascript:void(0)" class="closebtn" @click="closeNav"
+            >&times;</a
+          >
+          <h3 class="text-white ml-2">Catagories</h3>
+        </div>
         <form class="form-inline ml-auto" style="margin: 10px !important">
           <div
             class="form-group no-border"
@@ -60,7 +62,10 @@
         </form>
         <!-- catagories -->
 
-        <a v-for="cata in FilteredCatagories" :href="cata.name"
+        <a
+          style="text-transform: capitalize"
+          v-for="cata in FilteredCatagories"
+          :href="cata.name"
           >{{cata.name}}</a
         >
 
@@ -73,7 +78,7 @@
         <div class="container" style="max-width: 1353px">
           <div class="navbar-translate">
             <button class="openbtn btn btn-success" @click="openNav">
-              &#9776;
+              &#9776;Menu
             </button>
 
             <button
@@ -144,5 +149,6 @@
       src="assets/js/material-kit.js?v=2.0.4"
       type="text/javascript"
     ></script>
+    <script src="assets/js/themes.js" type="text/javascript"></script>
   </body>
 </html>

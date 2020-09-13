@@ -1,8 +1,5 @@
-
-
-import SearchPage from '../js/pages/SearchPage.js'
-import MainPage from '../js/pages/MainPage.js'
-
+import SearchPage from "../js/pages/SearchPage.js";
+import MainPage from "../js/pages/MainPage.js";
 
 const routes = [
   { path: "/search", component: SearchPage },
@@ -10,7 +7,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  hash:false,
+  hash: false,
   routes,
 });
 
@@ -52,7 +49,7 @@ var app = new Vue({
       this.$router.push({ path: "/search?query=" + this.searchTerm });
     },
     openNav() {
-      document.getElementById("mySidebar").style.width = "350px";
+      document.getElementById("mySidebar").style.width = "280px";
     },
     /* Set the width of the sidebar to 0 and the left margin of the page content to 0 */
     closeNav() {
