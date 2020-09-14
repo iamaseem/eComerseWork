@@ -1,9 +1,11 @@
 import SearchPage from "../js/pages/SearchPage.js";
 import MainPage from "../js/pages/MainPage.js";
+import Vender from "../js/pages/Vender.js"
 
 const routes = [
   { path: "/search", component: SearchPage },
   { path: "/", component: MainPage },
+  { path: "/venders", component: Vender },
 ];
 
 const router = new VueRouter({

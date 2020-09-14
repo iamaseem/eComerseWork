@@ -19,7 +19,13 @@ template: `
                   </span>
                 </h5>
                 <div class="form-group">
-                    
+                    <label for="selectCatagory">Category</label>
+                    <select class="form-control selectpicker" data-style="btn btn-link" id="selectCatagory">
+                      <option>All</option>
+                      <option>Electronics</option>
+                      <option>Electricals</option>
+                      <option>Other</option>
+                    </select>
                     <br/>
                     <label for="priceRange">
                       Price Range
@@ -89,13 +95,91 @@ template: `
                 <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card">
                         <img style="height: 150px;"  :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
-                        <div class="card-body px-4 pt-1 pb-3" @click="cardClicked(i)">
-                            <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
+                        <div class="card-body px-4 pt-1 pb-3">
+                            <h5 class="card-title m-0 p-0">{{i.vendorName}}</h5>
+                            <h6 class="m-0 p-0">{{i.name}}</h6>
+                            <small>{{i.company}}</small>
+                            <div class="d-flex pt-2" style="justify-content:space-between">
+                                <span class="badge badge-success py-2 px-2">
+                                  <span class="text-white" style="font-size:.6rem">
+                                    INR
+                                  </span>
+                                  {{i.price}}
+                                </span>
+                                
+                                <small  v-if="i.quantity">
+                                  <span class="text-success">
+                                    in stock
+                                  </span>
+                                  <span>{{i.quantity}} left</span>
+                                </small>
+                                <small  v-else>
+                                  <span class="text-danger">
+                                    out of stock
+                                  </span>
+                                </small>
+                              </div>
+                            <p class="card-text py-1">{{i.desc}}</p>
                             
-                            <p class="card-text py-1 text-success">{{i.spec}}</p>
+                            <div class="d-flex" style="justify-content:center">
+                                <button class="btn btn-sm btn-secondary">Buy now</button>
+                                <button
+                                    class="btn btn btn-sm btn-primary"
+                                    @click="bargainClicked(i)"
+                                    data-toggle="modal" data-target="#exampleModal"
+                                  >Bargain
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Model  -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                        
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">
+                                {{this.selectedSearchResult.vendorName}}
+                            </h5> 
+
+                            <button @click="selectedSearchResult={}" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                {{this.selectedSearchResult.name}}
+                            </p>
+                            <p>{{this.selectedSearchResult.company}}</p>
+                            <span class="badge badge-success py-2 px-2">
+                            <span class="text-white" style="font-size:.6rem">
+                              INR
+                            </span>
+                                  {{this.selectedSearchResult.price}}
+                            </span>
+                            <p>{{this.selectedSearchResult.desc}}</p>
+                            <p class="text-success">{{this.selectedSearchResult.spec}}</p>
+                            <small class="text-danger">Hurry!! only {{this.selectedSearchResult.quantity}} left</small>
+                            <div>
+                              <label for="bargainNumber">Number of Pieces</label>
+                              <input v-model="bargainNumber" type="number" class="form-control" id="bargainNumber" min="1" :max="selectedSearchResult.quantity">
+                              <label for="bargainPrice">At a rate of</label>
+                              <input v-model="bargainPrice" type="number" class="form-control" id="bargainPrice" min="1" :max="selectedSearchResult.price">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button @click="selectedSearchResult={}" type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="button" class="btn btn-primary" @click="bargain">Bargain</button>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Model -->
+
                 <!-- Modal for caro -->
 
                   <div class="modal fade" id="carouselModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -124,6 +208,10 @@ template: `
                           
                       
                         </div>
+                        <div class="modal-footer">
+                          <button @click="selectedSearchResult={}" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-dismiss="modal">Bargain</button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -147,9 +235,7 @@ template: `
   },
   computed: {
     searchResultsAfterFilter() {
-      let tempArray = this.searchResults
-      
-      
+      let tempArray = this.searchResults;
       if (!this.filterMaxPrice && !this.priceSort) {
         return this.searchResults;
       }else{
@@ -169,9 +255,6 @@ template: `
     },
   },
   methods: {
-    cardClicked(item){
-      this.$router.push({ path: "/venders?query=" + item.name });
-    },
     showImgCaro(item) {
       this.selectedSearchResult = item;
       $("#carouselModel").modal("show");
@@ -187,6 +270,11 @@ template: `
         this.searchResults = this.products;
         return;
       }
+    //   if(this.$route.query.category){
+    //     this.searchResults = this.products.filter((product)=>{
+            
+    //     })
+    //   }
       this.searchResults = this.products.filter((product) => {
         return (
           product.name
@@ -197,27 +285,9 @@ template: `
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
             product.spec
             .toUpperCase()
-            .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.company
-            .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1
         );
       });
-
-
-      
-      let tempArray = [];
-      let tempNames = [...new Set( this.searchResults.map((result)=> result.name) )]
-      for(name of tempNames){
-          tempArray.push(this.searchResults.find((result)=>{
-            return(
-              result.name == name 
-            )
-          })
-        )
-      }
-      this.searchResults = tempArray
-
     },
     bargainClicked(i) {
       this.selectedSearchResult = i;
@@ -255,7 +325,8 @@ template: `
               spec: doc.data().Specification,
               images: [],
               imgCount: doc.data().ImageCount,
-              vendorName: doc.data().vendorName
+              vendorName: doc.data().VendorName,
+              vendorId: doc.data().VendorID
             });
           });
         })
