@@ -65,7 +65,7 @@
         <a
           style="text-transform: capitalize"
           v-for="cata in FilteredCatagories"
-          :href="cata.name"
+          @click="cataClicked(cata.name)"
           >{{cata.name}}</a
         >
 

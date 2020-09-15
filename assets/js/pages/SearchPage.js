@@ -200,6 +200,9 @@ template: `
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
             product.company
             .toUpperCase()
+            .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
+            product.category
+            .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1
         );
       });
@@ -255,7 +258,8 @@ template: `
               spec: doc.data().Specification,
               images: [],
               imgCount: doc.data().ImageCount,
-              vendorName: doc.data().vendorName
+              vendorName: doc.data().vendorName,
+              category:doc.data().Category
             });
           });
         })

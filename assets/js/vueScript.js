@@ -22,16 +22,13 @@ var app = new Vue({
       searchTerm: null,
       catagories: [
         {
-          name: "fridge",
+          name: "Electronics",
         },
         {
-          name: "washing machine",
+          name: "Home appliance",
         },
         {
-          name: "mixi",
-        },
-        {
-          name: "fan",
+          name: "Electricals",
         },
       ],
     };
@@ -47,6 +44,9 @@ var app = new Vue({
     },
   },
   methods: {
+    cataClicked(cataName){
+      this.$router.push({ path: "/search?query=" + cataName });
+    },
     search() {
       this.$router.push({ path: "/search?query=" + this.searchTerm });
     },
