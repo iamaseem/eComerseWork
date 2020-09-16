@@ -70,24 +70,6 @@ template: `
                         </label>
                     </div>
                     <br/>
-                    <label for="selectCatagory">Company</label>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
-                              Samsung
-                            <span class="form-check-sign">
-                                <span class="check"></span>
-                            </span>
-                        </label>
-                        <br/>
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
-                              Bajaj
-                            <span class="form-check-sign">
-                                <span class="check"></span>
-                            </span>
-                        </label>
-                    </div>
                 </div>
 
             </div>

@@ -64,24 +64,6 @@ template: `
                         </label>
                     </div>
                     <br/>
-                    <label for="selectCatagory">Company</label>
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
-                              Samsung
-                            <span class="form-check-sign">
-                                <span class="check"></span>
-                            </span>
-                        </label>
-                        <br/>
-                        <label class="form-check-label">
-                            <input class="form-check-input" type="checkbox" value="">
-                              Bajaj
-                            <span class="form-check-sign">
-                                <span class="check"></span>
-                            </span>
-                        </label>
-                    </div>
                 </div>
 
             </div>
@@ -103,26 +85,8 @@ template: `
                       <div class="modal-content">
                         
                         <div class="modal-body">
-                            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                            <ol class="carousel-indicators">
-                              <li v-for="(image,index) in selectedSearchResult.images" data-target="#carouselExampleIndicators" data-slide-to="index" v-bind:class="{ active: !index }"></li>
-                            </ol>
-                            <div class="carousel-inner">
-                              <div v-for="(image,index) in selectedSearchResult.images" class="carousel-item" v-bind:class="{ active: !index }">
-                                <img class="d-block w-100" :src="image" alt="First slide">
-                              </div>
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                              <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </div>
-                          
-                      
+                            
+                          <img class="d-block w-100" :src="selectedSearchResult.images?selectedSearchResult.images[0]:null" alt="image">
                         </div>
                       </div>
                     </div>
