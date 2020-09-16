@@ -65,7 +65,7 @@
         <a
           style="text-transform: capitalize"
           v-for="cata in FilteredCatagories"
-          @click="cataClicked(cata.name)"
+          v-bind:href="'#/search?query=' + cata.name"
           >{{cata.name}}</a
         >
 
