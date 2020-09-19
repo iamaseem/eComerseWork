@@ -1,6 +1,6 @@
 import SearchPage from "../js/pages/SearchPage.js";
 import MainPage from "../js/pages/MainPage.js";
-import Vender from "../js/pages/Vender.js"
+import Vender from "../js/pages/Vender.js";
 
 const routes = [
   { path: "/search", component: SearchPage },
@@ -22,13 +22,13 @@ var app = new Vue({
       searchTerm: null,
       catagories: [
         {
-          name: "Electronics",
+          name: "electronics",
         },
         {
-          name: "Home appliance",
+          name: "home appliance",
         },
         {
-          name: "Electricals",
+          name: "electricals",
         },
       ],
     };
@@ -44,7 +44,7 @@ var app = new Vue({
     },
   },
   methods: {
-    cataClicked(cataName){
+    cataClicked(cataName) {
       this.$router.push({ path: "/search?query=" + cataName });
     },
     search() {

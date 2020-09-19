@@ -13,14 +13,14 @@
 
 .sidebar h3 {
   position: absolute;
-  top: 17px;
+  top: 29px;
   margin-top: 0px;
 }
 
 /* The sidebar links */
 .sidebar a {
   padding: 8px 8px 8px 32px;
-  background: #7386d5;
+  /*background: #7386d5;*/
   text-decoration: none;
   font-size: 18px;
   color: #ffffff;
@@ -36,24 +36,27 @@
 /* Position and style the close button (top right corner) */
 .sidebar .closebtn {
   position: absolute;
-  top: 10px;
-  right: 25px;
+  top: 7px;
+  right: 20px;
   font-size: 36px;
   margin-left: 50px;
 }
 
 /* The button used to open the sidebar */
 .openbtn {
-  font-size: 20px;
+  height: 45px;
+  font-size: 17px;
   cursor: pointer;
-  background-color: #111;
   color: white;
   padding: 10px 15px;
-  border: none;
+  border: 1px white solid;
+  border-radius: 2px;
+  background-color: #3f51b5 !important;
 }
 
 .openbtn:hover {
-  background-color: #444;
+  background-color: #009aae !important;
+  border: 1px #ebebeb solid;
 }
 
 /* Style page content - use this if you want to push the page content to the right when you open the side navigation */
@@ -74,4 +77,84 @@
 ::placeholder {
   color: #fff !important;
   opacity: 1 !important; /* Firefox */
+}
+
+.searchin {
+  border: 0;
+  border-radius: 10px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+  height: 30px;
+}
+
+.searchbtn {
+  height: 39px;
+  width: 39px;
+  background-color: #3f51b5 !important;
+  border-radius: 2px !important;
+  font-size: 16px;
+  color: #ffffff;
+  font-weight: 900;
+  border: 1px solid #ffffff;
+  margin-left: 5px;
+  transition: all 0.3s ease 0s;
+}
+.searchbtn:hover {
+  box-shadow: 7px 6px 13px rgba(0, 0, 0, 0.46);
+  background-color: #009aae !important;
+  transform: translateY(-5px);
+}
+
+.searchinput {
+  /*margin-left: 350px;*/
+  width: 400px !important;
+}
+
+.catasearch {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.catasearch button {
+  box-shadow: none !important;
+}
+
+.catagorylst {
+  border-top: 1px white solid;
+  transition: all 0.3s ease 0s;
+}
+
+.catagorylst:hover {
+  margin-left: 20px;
+  transition: all 0.3s ease 0s;
+}
+
+hr {
+  border-top: 1px white solid;
+  margin: 0;
+}
+
+.boderfil {
+  border: 1px #a9a9a9 solid;
+  border-radius: 8px;
+}
+
+.ovr {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 3px;
+}
+
+.toast {
+  top: 10px;
+  right: 10px;
+  position: fixed;
+  z-index: 1;
+}
+
+.carcntr {
+  font-size: 29px;
+  color: black;
+  font-weight: 700;
+  z-index: 0;
 }

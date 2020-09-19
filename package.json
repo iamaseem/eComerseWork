@@ -51,6 +51,7 @@
   "homepage": "https://demos.creative-tim.com/material-kit/index.html",
   "dependencies": {
     "firebase": "^7.19.1",
+    "vue-toastification": "^1.7.7",
     "vuefire": "^2.2.4"
   }
 }

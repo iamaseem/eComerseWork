@@ -2,16 +2,16 @@ import db, { store } from "../firebaseinit.js";
 
 var storeRef = store.ref();
 
-export default{
-name:"SearchPage",
-template: `
+export default {
+  name: "SearchPage",
+  template: `
     <div>
         <div v-if="loading" style="width:100vw;height:100vh;" class="text-center">
             <h2 style="margin-top:10vh">Loading...</h2>
         </div>
         
         <div v-else class="d-flex">
-            <div style=" flex:1" class="bg-white m-4 p-4">
+            <div style=" flex:1" class="bg-white m-4 p-4 boderfil">
                 <h5>
                   Filter
                   <span class="material-icons" style="font-size:13px;">
@@ -72,7 +72,7 @@ template: `
                     <div class="card">
                         <img style="height: 150px;"  :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
                         <div class="card-body px-4 pt-1 pb-3" @click="cardClicked(i)">
-                            <h5 class="card-title mb-0 pb-0">{{i.name}}</h5>
+                            <a v-bind:href="'#/venders?query=' + i.name"><h5 class="card-title mb-0 pb-0">{{i.name}}</h5></a>
                             
                             <p class="card-text py-1 text-success">{{i.spec}}</p>
                         </div>
@@ -106,36 +106,39 @@ template: `
       bargainPrice: null,
       bargainNumber: null,
       imageUrl: null,
-      priceSort:null,
+      priceSort: null,
     };
   },
   computed: {
     searchResultsAfterFilter() {
-      let tempArray = this.searchResults
-      
-      
+      let tempArray = this.searchResults;
+
       if (!this.filterMaxPrice && !this.priceSort) {
         return this.searchResults;
-      }else{
-          if(this.filterMaxPrice){
-            tempArray= tempArray.filter((result) => {
-                return parseFloat(result.price) <= this.filterMaxPrice;
-            });
-          }
-          if(this.priceSort == "asc"){
-              tempArray= tempArray.sort(function(a, b){return a.price - b.price});
-          }
-          if(this.priceSort == "dsc"){
-            tempArray= tempArray.sort(function(a, b){return b.price - a.price});
+      } else {
+        if (this.filterMaxPrice) {
+          tempArray = tempArray.filter((result) => {
+            return parseFloat(result.price) <= this.filterMaxPrice;
+          });
         }
-         return tempArray;
+        if (this.priceSort == "asc") {
+          tempArray = tempArray.sort(function (a, b) {
+            return a.price - b.price;
+          });
+        }
+        if (this.priceSort == "dsc") {
+          tempArray = tempArray.sort(function (a, b) {
+            return b.price - a.price;
+          });
+        }
+        return tempArray;
       }
     },
   },
   methods: {
-    cardClicked(item){
-      this.$router.push({ path: "/venders?query=" + item.name });
-    },
+    //cardClicked(item) {
+    //this.$router.push({ path: "/venders?query=" + item.name });
+    //},
     showImgCaro(item) {
       this.selectedSearchResult = item;
       $("#carouselModel").modal("show");
@@ -156,35 +159,33 @@ template: `
           product.name
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.desc
+          product.desc
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.spec
+          product.spec
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.company
+          product.company
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.category
+          product.category
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1
         );
       });
 
-
-      
       let tempArray = [];
-      let tempNames = [...new Set( this.searchResults.map((result)=> result.name) )]
-      for(name of tempNames){
-          tempArray.push(this.searchResults.find((result)=>{
-            return(
-              result.name == name 
-            )
+      let tempNames = [
+        ...new Set(this.searchResults.map((result) => result.name)),
+      ];
+      for (name of tempNames) {
+        tempArray.push(
+          this.searchResults.find((result) => {
+            return result.name == name;
           })
-        )
+        );
       }
-      this.searchResults = tempArray
-
+      this.searchResults = tempArray;
     },
     bargainClicked(i) {
       this.selectedSearchResult = i;
@@ -223,7 +224,7 @@ template: `
               images: [],
               imgCount: doc.data().ImageCount,
               vendorName: doc.data().vendorName,
-              category:doc.data().Category
+              category: doc.data().Category,
             });
           });
         })
@@ -233,21 +234,20 @@ template: `
     },
     readImage() {
       for (let product in this.products) {
-          let tempArray =[];
+        let tempArray = [];
         for (let imgNo = 1; imgNo <= this.products[product].imgCount; imgNo++) {
-          
           var imageRef = storeRef.child(
             "/Images/" + this.products[product].id + "/" + imgNo
           );
           imageRef
             .getDownloadURL()
             .then((url) => {
-                tempArray.push(url)
+              tempArray.push(url);
             })
             .catch(function (error) {
               console.log(error);
             });
-            this.products[product].images = tempArray
+          this.products[product].images = tempArray;
         }
       }
       console.log(this.products);
@@ -267,5 +267,38 @@ template: `
   async mounted() {
     await this.readProducts();
     //await this.readImage();
-  }
-}
+  },
+};
+
+db.collection("Bargain")
+  .where("isResponded", "==", true)
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      Vue.use(Toasted);
+      let toast = Vue.toasted.show(
+        "Your Bragain Has Accepeted for " +
+          doc.data().productName +
+          "<br>The last price: " +
+          doc.data().acceptedPrice +
+          "<br>Previous price: " +
+          doc.data().currentPrice +
+          "<br>Gift: " +
+          doc.data().gift,
+        {
+          theme: "toasted-primary",
+          position: "top-right",
+          duration: 10000,
+          action: {
+            text: "Cancel",
+            onClick: (e, toastObject) => {
+              toastObject.goAway(0);
+            },
+          },
+        }
+      );
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });

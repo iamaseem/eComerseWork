@@ -2,9 +2,9 @@ import db, { store } from "../firebaseinit.js";
 
 var storeRef = store.ref();
 
-export default{
-name:"SearchPage",
-template: `
+export default {
+  name: "SearchPage",
+  template: `
     <div>
         <div v-if="loading" style="width:100vw;height:100vh;" class="text-center">
             <h2 style="margin-top:10vh">Loading...</h2>
@@ -74,11 +74,11 @@ template: `
 
             </div>
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
-                <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
+                <div class="px-2" style="width:20%; min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card">
                         <img style="height: 150px;"  :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
-                        <div class="card-body px-4 pt-1 pb-3">
-                            <h5 class="card-title m-0 p-0">{{i.vendorName}}</h5>
+                        <div class="card-body px-4 pt-1 pb-3" style="height: 280px;">
+                            <h5 class="card-title p-0" style="margin-top: 8px;">{{i.vendorName}}</h5>
                             <h6 class="m-0 p-0">{{i.name}}</h6>
                             <small>{{i.company}}</small>
                             <div class="d-flex pt-2" style="justify-content:space-between">
@@ -101,10 +101,10 @@ template: `
                                   </span>
                                 </small>
                               </div>
-                            <p class="card-text py-1">{{i.desc}}</p>
+                              <div id="ovr" class="ovr" style="height: 30px; width: 200px;"><p class="card-text py-1 ovr">{{i.desc}}</p></div>
                             
                             <div class="d-flex" style="justify-content:center">
-                                <button class="btn btn-sm btn-secondary">Buy now</button>
+                                <a href="/load.html"><button class="btn btn-sm btn-secondary">Buy now</button></a>
                                 <button
                                     class="btn btn btn-sm btn-primary"
                                     @click="bargainClicked(i)"
@@ -147,8 +147,8 @@ template: `
                             <div>
                               <label for="bargainNumber">Number of Pieces</label>
                               <input v-model="bargainNumber" type="number" class="form-control" id="bargainNumber" min="1" :max="selectedSearchResult.quantity">
-                              <label for="bargainPrice">At a rate of</label>
-                              <input v-model="bargainPrice" type="number" class="form-control" id="bargainPrice" min="1" :max="selectedSearchResult.price">
+                              <!--<label for="bargainPrice">At a rate of</label>
+                              <input v-model="bargainPrice" type="number" class="form-control" id="bargainPrice" min="1" :max="selectedSearchResult.price">-->
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -212,7 +212,7 @@ template: `
       bargainPrice: null,
       bargainNumber: null,
       imageUrl: null,
-      priceSort:null,
+      priceSort: null,
     };
   },
   computed: {
@@ -220,19 +220,23 @@ template: `
       let tempArray = this.searchResults;
       if (!this.filterMaxPrice && !this.priceSort) {
         return this.searchResults;
-      }else{
-          if(this.filterMaxPrice){
-            tempArray= tempArray.filter((result) => {
-                return parseFloat(result.price) <= this.filterMaxPrice;
-            });
-          }
-          if(this.priceSort == "asc"){
-              tempArray= tempArray.sort(function(a, b){return a.price - b.price});
-          }
-          if(this.priceSort == "dsc"){
-            tempArray= tempArray.sort(function(a, b){return b.price - a.price});
+      } else {
+        if (this.filterMaxPrice) {
+          tempArray = tempArray.filter((result) => {
+            return parseFloat(result.price) <= this.filterMaxPrice;
+          });
         }
-         return tempArray;
+        if (this.priceSort == "asc") {
+          tempArray = tempArray.sort(function (a, b) {
+            return a.price - b.price;
+          });
+        }
+        if (this.priceSort == "dsc") {
+          tempArray = tempArray.sort(function (a, b) {
+            return b.price - a.price;
+          });
+        }
+        return tempArray;
       }
     },
   },
@@ -252,20 +256,20 @@ template: `
         this.searchResults = this.products;
         return;
       }
-    //   if(this.$route.query.category){
-    //     this.searchResults = this.products.filter((product)=>{
-            
-    //     })
-    //   }
+      //   if(this.$route.query.category){
+      //     this.searchResults = this.products.filter((product)=>{
+
+      //     })
+      //   }
       this.searchResults = this.products.filter((product) => {
         return (
           product.name
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.desc
+          product.desc
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1 ||
-            product.spec
+          product.spec
             .toUpperCase()
             .indexOf(this.$route.query.query.toUpperCase()) > -1
         );
@@ -282,14 +286,28 @@ template: `
         alert("Only " + this.selectedSearchResult.quantity + " pieces left !");
         return;
       }
-      if (this.bargainPrice <= (this.selectedSearchResult.price * 3) / 4) {
-        alert("Bargain price cannot be too low");
-        return;
-      }
+      db.collection("Bargain")
+        .add({
+          buyerID: "1234",
+          currentPrice: this.selectedSearchResult.price,
+          gift: null,
+          isResponded: false,
+          productID: this.selectedSearchResult.id,
+          productName: this.selectedSearchResult.name,
+          requestedQuantity: this.bargainNumber,
+          vendorID: this.selectedSearchResult.vendorId,
+        })
+        .then(function (docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function (error) {
+          console.error("Error adding document: ", error);
+        });
       //Do something.
       $("#exampleModal").modal("hide");
+      $(".modal-backdrop").remove();
+      location.reload(true);
       this.bargainNumber = null;
-      this.bargainPrice = null;
       this.selectedSearchResult = {};
     },
     readProducts() {
@@ -308,7 +326,7 @@ template: `
               images: [],
               imgCount: doc.data().ImageCount,
               vendorName: doc.data().VendorName,
-              vendorId: doc.data().VendorID
+              vendorId: doc.data().VendorID,
             });
           });
         })
@@ -318,21 +336,20 @@ template: `
     },
     readImage() {
       for (let product in this.products) {
-          let tempArray =[];
+        let tempArray = [];
         for (let imgNo = 1; imgNo <= this.products[product].imgCount; imgNo++) {
-          
           var imageRef = storeRef.child(
             "/Images/" + this.products[product].id + "/" + imgNo
           );
           imageRef
             .getDownloadURL()
             .then((url) => {
-                tempArray.push(url)
+              tempArray.push(url);
             })
             .catch(function (error) {
               console.log(error);
             });
-            this.products[product].images = tempArray
+          this.products[product].images = tempArray;
         }
       }
       console.log(this.products);
@@ -352,5 +369,5 @@ template: `
   async mounted() {
     await this.readProducts();
     //await this.readImage();
-  }
-}
+  },
+};
