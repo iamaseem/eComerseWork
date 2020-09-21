@@ -187,27 +187,6 @@ export default {
       }
       this.searchResults = tempArray;
     },
-    bargainClicked(i) {
-      this.selectedSearchResult = i;
-    },
-    bargain() {
-      if (
-        parseFloat(this.bargainNumber) > this.selectedSearchResult.quantity ||
-        !this.bargainNumber
-      ) {
-        alert("Only " + this.selectedSearchResult.quantity + " pieces left !");
-        return;
-      }
-      if (this.bargainPrice <= (this.selectedSearchResult.price * 3) / 4) {
-        alert("Bargain price cannot be too low");
-        return;
-      }
-      //Do something.
-      $("#exampleModal").modal("hide");
-      this.bargainNumber = null;
-      this.bargainPrice = null;
-      this.selectedSearchResult = {};
-    },
     readProducts() {
       db.collection("Products")
         .get()

@@ -286,6 +286,7 @@ export default {
         alert("Only " + this.selectedSearchResult.quantity + " pieces left !");
         return;
       }
+      console.log("entered");
       db.collection("Bargain")
         .add({
           buyerID: "1234",
@@ -306,7 +307,7 @@ export default {
       //Do something.
       $("#exampleModal").modal("hide");
       $(".modal-backdrop").remove();
-      location.reload(true);
+      //location.reload(true);
       this.bargainNumber = null;
       this.selectedSearchResult = {};
     },
