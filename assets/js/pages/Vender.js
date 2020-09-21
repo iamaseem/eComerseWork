@@ -6,8 +6,8 @@ export default {
   name: "SearchPage",
   template: `
     <div>
-        <div v-if="loading" style="width:100vw;height:100vh;" class="text-center">
-            <h2 style="margin-top:10vh">Loading...</h2>
+        <div v-if="loading" style="width:100vw;height:100vh;justify-content:center" class="d-flex">
+          <div class="loader"></div>
         </div>
         
         <div v-else class="d-flex">

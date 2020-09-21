@@ -6,8 +6,8 @@ export default {
   name: "SearchPage",
   template: `
     <div>
-        <div v-if="loading" style="width:100vw;height:100vh;" class="text-center">
-            <h2 style="margin-top:10vh">Loading...</h2>
+        <div v-if="loading" style="width:100vw;height:100vh;justify-content:center" class="d-flex">
+          <div class="loader"></div>
         </div>
         
         <div v-else class="d-flex">
@@ -68,7 +68,7 @@ export default {
 
             </div>
             <div class="d-flex" style="flex-wrap: wrap; flex:9">
-                <div class="px-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
+                <div class="p-2" style="width: 20%;min-width:250px;" v-for="i in searchResultsAfterFilter">
                     <div class="card">
                         <img style="height: 150px;"  :src="i.images[0]" @click="showImgCaro(i)" class="card-img-top" rel="nofollow" alt="Card image cap">
                         <div class="card-body px-4 pt-1 pb-3" @click="cardClicked(i)">
