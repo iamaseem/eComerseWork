@@ -158,3 +158,12 @@ hr {
   font-weight: 700;
   z-index: 0;
 }
+.imgsec {
+  margin-left: 6px;
+  margin-top: 200px;
+}
+.imgsec img {
+  margin: 5px;
+  width: 435px;
+  height: 300px;
+}

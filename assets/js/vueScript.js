@@ -22,13 +22,13 @@ var app = new Vue({
       searchTerm: null,
       catagories: [
         {
-          name: "electronics",
+          name: "home appliances",
         },
         {
-          name: "home appliance",
+          name: "electonics",
         },
         {
-          name: "electricals",
+          name: "sports",
         },
       ],
     };
