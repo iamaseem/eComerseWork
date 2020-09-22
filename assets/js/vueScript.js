@@ -30,6 +30,9 @@ var app = new Vue({
         {
           name: "Sports",
         },
+        {
+          name: "Furniture",
+        },
       ],
     };
   },
