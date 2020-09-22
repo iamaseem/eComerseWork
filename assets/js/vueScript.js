@@ -25,7 +25,7 @@ var app = new Vue({
           name: "Home Appliance",
         },
         {
-          name: "Electonics",
+          name: "Electronics",
         },
         {
           name: "Sports",
